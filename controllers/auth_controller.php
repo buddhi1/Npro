@@ -3,6 +3,7 @@
 * controller which handles the authetication of users
 */
 require_once('controller.php');
+require_once('/models/auth.php');
 
 class AuthController extends Controller
 {
@@ -16,7 +17,10 @@ class AuthController extends Controller
 	//validates the login credentials
 	//POST request
 	public static function postLogin(){
-		session_start();
+		
+		if (!isset($_SESSION)) {
+			session_start();
+		}
 		if (!AuthController::isLogin()) {
 			if(isset($_POST['email']) && isset($_POST['password'])){
 				$email = $_POST['email'];
@@ -25,7 +29,7 @@ class AuthController extends Controller
 		      	if ($email != '' && $password != '') {
 		      		//checking the credentials in the db
 		    		$db = db::getConnection();
-			    	$req = $db->prepare('SELECT * FROM auth WHERE email = :email AND password = :password');
+			    	$req = $db->prepare('SELECT * FROM auth WHERE email = :email AND password = :password AND active = 1');
 			      	$req->execute(array('email' => $email, 'password' => md5($password))); //parameter value passing
 			      	$obj = $req->fetch();
 		      		if ($obj) {
@@ -37,6 +41,7 @@ class AuthController extends Controller
 			      		$_SESSION["id"] = $obj[0];
 			      		$_SESSION["email"] = $obj[1];
 			      		$_SESSION["password"] = $obj[2]; 
+			      		$_SESSION["type"] = $obj[3]; 
 
 			      		if (isset($_SESSION['id']) && isset($_SESSION['email']) && isset($_SESSION['password'])) {
 			      			$message = "Login Successfull";
@@ -61,7 +66,10 @@ class AuthController extends Controller
 	//destroys a session
 	//GET request
 	public static function logout() {
-		session_start();
+		
+		if (!isset($_SESSION)) {
+			session_start();
+		}
 		if (AuthController::isLogin()) {
 			//set db flag to logout
 			$db = db::getConnection();
@@ -84,10 +92,25 @@ class AuthController extends Controller
 	//internal class function
 	public static function isLogin() {
 		// var_dump(PHP_SESSION_NONE);exit;
-		if (count($_SESSION) == 3) { //if one session available
+		if (count($_SESSION) >= 1) { //if one session available
 			return true;
 		}
 		return false;
+	}
+
+	//return online user list
+	//POST request
+	public static function onlineAll() {
+		$users = [];
+		$db = db::getConnection();
+    	//$req = $db->prepare('SELECT * FROM auth WHERE flag >= 1 AND active = 1');
+    	$req = $db->query('SELECT id, email FROM auth');
+      	// creating a list of objects from the database results
+		foreach($req->fetchAll() as $obj) {
+			$users[] = new Auth($obj['id'], $obj['email']);
+		}
+
+      	header('Location: http://'.Controller::$url_http.'/public/temp.php?obj='.json_encode($users));		//routing to the default ajax 
 	}
 }
  ?>

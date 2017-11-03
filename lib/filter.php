@@ -3,9 +3,21 @@
 //controller allowed actions for all users
 $controllers = array(
 						'pages' => ['index', 'error'],
+						'auth' => ['login', 'postLogin', 'logout']
+					);
+//admin authorized
+$controllers_ad = array(
+						'pages' => ['index', 'error'],
 						'users' => ['index', 'create', 'edit', 'save', 'postEdit', 'delete', 'editAuth', 'postEditAuth'],
-						'auth' => ['login', 'postLogin', 'logout'],
-						'msg' => ['send']
+						'auth' => ['login', 'postLogin', 'logout', 'onlineAll'],
+						'msg' => ['save', 'index', 'allMsg']
+					);
+//standard user autherized 
+$controllers_st = array(
+						'pages' => ['index', 'error'],
+						'users' => ['index', 'create', 'edit', 'save', 'postEdit', 'delete', 'editAuth', 'postEditAuth'],
+						'auth' => ['login', 'postLogin', 'logout', 'onlineAll'],
+						'msg' => ['save', 'index', 'allMsg']
 					);
 
  ?>

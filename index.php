@@ -17,6 +17,7 @@ $url = $_SERVER['REQUEST_URI'];
 //Split URL path
 $path_info = explode('/', parse_url($url, PHP_URL_PATH));
 $url = $path_info[1];
+$url_http = $_SERVER['SERVER_NAME'].'/'.$url;
 
 if (sizeof($path_info) <= 4 && sizeof($path_info) > 3) { //passed to requested action
 	$controller = $path_info[2];
@@ -32,7 +33,6 @@ if (sizeof($path_info) <= 4 && sizeof($path_info) > 3) { //passed to requested a
 	$controller = 'pages';
 	$action = 'index';	
 }
-// var_dump(sizeof($path_info));
 
 require_once('views/layouts/default_layout.php');
 ?>
