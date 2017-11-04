@@ -10,14 +10,14 @@ $controllers_ad = array(
 						'pages' => ['index', 'error'],
 						'users' => ['index', 'create', 'edit', 'save', 'postEdit', 'delete', 'editAuth', 'postEditAuth'],
 						'auth' => ['login', 'postLogin', 'logout', 'onlineAll'],
-						'msg' => ['save', 'index', 'allMsg']
+						'msg' => ['save', 'index', 'allMsg', 'newMsg']
 					);
 //standard user autherized 
 $controllers_st = array(
 						'pages' => ['index', 'error'],
 						'users' => ['index', 'create', 'edit', 'save', 'postEdit', 'delete', 'editAuth', 'postEditAuth'],
 						'auth' => ['login', 'postLogin', 'logout', 'onlineAll'],
-						'msg' => ['save', 'index', 'allMsg']
+						'msg' => ['save', 'index', 'allMsg', 'newMsg']
 					);
 
  ?>

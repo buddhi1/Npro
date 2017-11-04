@@ -62,12 +62,44 @@ class MessagesController extends Controller
 
 		$req->bindValue(':pid', $pid);
 		$req->bindValue(':id', $id);
-		$req->bindValue(':lt', (int) 0, PDO::PARAM_INT);
+		$req->bindValue(':lt', (int) $lt, PDO::PARAM_INT);
 		$req->execute();
 		// creating a list of objects from the database results
 
 		while ($obj = $req->fetch()) {
-			$msgs[] = new Message($obj['id'], $obj['text'], $obj['se_id'], $obj['re_id']);
+			$msgs[] = new Message($obj['id'], $obj['text'], $obj['se_id'], $obj['re_id'], $obj['created_at']);
+		}
+		
+		header('Location: http://'.Controller::$url_http.'/public/temp.php?obj='.json_encode($msgs));		//routing to the default ajax 
+	}
+
+	//load all messages
+	//POST request
+	public function newMsg() {
+		if (!isset($_SESSION)) {
+			session_start();
+		}
+		$lt = 0;
+		if (isset($_REQUEST['limit'])) {
+			$lt = $_REQUEST['limit'];
+		}
+
+		if (isset($_REQUEST['crat'])) {
+			$crat = $_REQUEST['crat'];
+		} 
+		$pid = 3;
+		$msgs = [];
+		$db = db::getConnection();
+		$req = $db->prepare('SELECT DISTINCT messages.id, messages.created_at, text, se_id, re_id FROM messages, msg_sent WHERE id = me_id AND (se_id = :pid AND re_id = :id) OR (se_id = :id AND re_id = :pid) AND messages.created_at > :crat ORDER BY messages.created_at DESC');
+
+		$req->bindValue(':pid', $pid);
+		$req->bindValue(':id', $id);
+		$req->bindValue(':crat', $crat);
+		$req->execute();
+		// creating a list of objects from the database results
+		
+		while ($obj = $req->fetch()) {
+			$msgs[] = new Message($obj['id'], $obj['text'], $obj['se_id'], $obj['re_id'], $obj['created_at']);
 		}
 		
 		header('Location: http://'.Controller::$url_http.'/public/temp.php?obj='.json_encode($msgs));		//routing to the default ajax 
