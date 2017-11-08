@@ -44,8 +44,9 @@ class UsersController extends Controller
 	      		$db = db::getConnection();
 	    		$req = $db->prepare('INSERT INTO auth (email, password, type, active, flag, last_login) VALUES (:email, :password, :type, :active, :flag, :last_login)');
 	    		$value1 = $req->execute(array('email' => $email, 'password' => md5($password), 'type' => $type, 'active' => 0, 'flag' => 0, 'last_login' => $now));
-	    		$id = $db->lastInsertId();
+	    		
 	    		if ($value1) {
+            $id = $db->lastInsertId();
 	    			$req = $db->prepare('INSERT INTO users VALUES (:auth_id, :name, :address, :gender, :picture, :created_at)');
 	    			$value2 = $req->execute(array('auth_id' => $id, 'name' => $fname.' '.$lname, 'address' => $street1.','.$street2.','.$city.','.$state.','.$zip, 'gender' => $gender, 'picture' => $pic_path, 'created_at' => $now));
 	    		}else {

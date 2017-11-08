@@ -12,8 +12,8 @@
 		</div>
 	</div>
 	<div class="msg-type-box">
-		<input type="text" name="msg" id="msg" placeholder="Say hi..." />
-		<button type="button" id="send" name="send">send</button>
+		<input disabled="disabled" type="text" name="msg" id="msg" placeholder="Say hi..." />
+		<button class="btn btn-outline-success" id="addKeyWord">Add KeyWord</button>
 	</div>
 </div>
 </body>

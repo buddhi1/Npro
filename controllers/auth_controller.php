@@ -101,10 +101,16 @@ class AuthController extends Controller
 	//return online user list
 	//POST request
 	public static function onlineAll() {
+		if (!isset($_SESSION)) {
+			session_start();
+		}
+		$id = $_SESSION['id'];
 		$users = [];
 		$db = db::getConnection();
     	//$req = $db->prepare('SELECT * FROM auth WHERE flag >= 1 AND active = 1');
-    	$req = $db->query('SELECT id, email FROM auth');
+    	$req = $db->prepare('SELECT id, email FROM auth WHERE id <> :id and active = 1');
+    	$req->execute(array('id' => $id));
+
       	// creating a list of objects from the database results
 		foreach($req->fetchAll() as $obj) {
 			$users[] = new Auth($obj['id'], $obj['email']);

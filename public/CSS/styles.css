@@ -90,8 +90,8 @@ input:checked + .slider:before {
   width: 98%;
   height: auto;
   margin: 0px;
-  border: 1px solid #2196F3;
-  border-radius: 3px;
+  /*border: 1px solid #2196F3;
+  border-radius: 3px;*/
   padding: 4px;
 }
 
@@ -124,29 +124,31 @@ input:checked + .slider:before {
   border: 1px solid #3F51B5;
   border-radius: 50%;
   float: left;
-  margin-right: 5px;
+  margin-right: 0px;
 }
 
 .msg-type-box input{
   display: inline-block;
   border: 1px solid #1578c7;
-  padding: 3px;
   border-radius: 15px;
+  padding: 20px;
   font-family: "Comic Sans MS", cursive, sans-serif;
-  width: 85%;
+  width: 79%;
   height: 25px;
   padding-left: 10px;
   padding-right: 10px;
   outline: none;
+  margin-right: 10px;
 }
 
 .user-name{
   background-color: yellow;
   display: inline-block;
   height: 30px;
-  width: 55px;
+  width: 83px;
   overflow: hidden;
   margin-top: 5px;
+  padding-left: 4px;
 }
 
 .my-prof{
@@ -165,6 +167,7 @@ input:checked + .slider:before {
 
 .prof-box{
   margin-bottom: 5px;
+  cursor: pointer;
 }
 
 .send-msg-box{
@@ -176,4 +179,8 @@ input:checked + .slider:before {
   margin-bottom: 8px;
   width: 100%;
   float: right;
+}
+
+.hide{
+  display: none;  
 }

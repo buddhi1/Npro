@@ -25,6 +25,11 @@ function call($controller, $action, $message, $url, $url_http){
 	        require_once('models/message.php');
 	        $controller = new MessagesController();
       	break;
+      	case 'keywords':
+	        // model is to query in the controller
+	        require_once('models/keyword.php');
+	        $controller = new KeywordsController();
+      	break;
 	}
 	//assign url 
 	$controller::$url = $url;
