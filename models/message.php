@@ -10,7 +10,18 @@ class Message
 	public $seId;
 	public $recId;
 	
-	function __construct($id, $text, $seId, $recId, $created_at)	
+	//class constructor
+	public function __construct($id, $name, $gender, $picture, $created_at)
+	{
+		$args = func_get_args(); // read arguements in the constructor call
+		$num = func_num_args();  // read number of arguements in the constructor call
+		if(method_exists($this,$f = '__construct_' . $num)) {
+			call_user_func_array(array($this,$f),$args); //calling the correct static function
+		}
+	}  
+
+	//for 5 arguements, class constructor
+	function __construct_5($id, $text, $seId, $recId, $created_at)	
 	{
 		$this->id = $id;
 		$this->text = $text;
@@ -18,5 +29,6 @@ class Message
 		$this->recId = $recId;
 		$this->created_at = $created_at;
 	}
+
 }
 ?>
