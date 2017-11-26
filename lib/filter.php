@@ -3,12 +3,13 @@
 //controller allowed actions for all users
 $controllers = array(
 						'pages' => ['index', 'error'],
-						'auth' => ['login', 'postLogin', 'logout']
+						'auth' => ['login', 'postLogin', 'logout'],
+						'users' => ['save']
 					);
 //admin authorized
 $controllers_ad = array(
 						'pages' => ['index', 'error'],
-						'users' => ['index', 'create', 'edit', 'save', 'postEdit', 'delete', 'editAuth', 'postEditAuth'],
+						'users' => ['index', 'create', 'edit', 'save', 'postEdit', 'delete', 'editAuth', 'postEditAuth', 'profile', 'changePassword', 'postChangePassword'],
 						'auth' => ['login', 'postLogin', 'logout', 'onlineAll'],
 						'msg' => ['save', 'index', 'allMsg', 'newMsg', 'search', 'searchPost'],
 						'keywords' => ['save']
@@ -16,7 +17,7 @@ $controllers_ad = array(
 //standard user autherized 
 $controllers_st = array(
 						'pages' => ['index', 'error'],
-						'users' => ['index', 'create', 'edit', 'save', 'postEdit', 'delete', 'editAuth', 'postEditAuth'],
+						'users' => ['edit', 'postEdit','profile', 'changePassword', 'postChangePassword'],
 						'auth' => ['login', 'postLogin', 'logout', 'onlineAll'],
 						'msg' => ['save', 'index', 'allMsg', 'newMsg', 'search', 'searchPost'],
 						'keywords' => ['save']

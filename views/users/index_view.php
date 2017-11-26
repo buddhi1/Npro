@@ -4,8 +4,8 @@
 	<title></title>
 </head>
 <body>
-<h2>All Users</h2>
-<div class="container">
+<div class="container-fluid">
+	<h2>All Users</h2>
 	<?php 
 		if (isset($_GET['message'])) {
 			echo '<div class="alert alert-info">'.urldecode(base64_decode($_GET['message'])).'</div>';

@@ -32,6 +32,15 @@ document.getElementById('msgs-box').onscroll = function() {
 	}
 }
 
+//message type event
+document.getElementById('msg').onkeypress = function(e) {
+
+	//sending message once enter is pressed
+	if (e.keyCode == 13) {
+		sendMessage();
+	}
+}
+
 
 //--------------- Event listners END -------------------------------------------------------------------------------------------------
 
@@ -67,17 +76,17 @@ var pswEditValidate = function(){
 	} 	
 }
 */
+
 //add key word button
 var addKeyWord = function() {
 	var kWord = window.getSelection().toString();
-	var mid = 126;
-	
+	mid = window.getSelection().focusNode.nextSibling.innerText;	//mesage id of the highlighted message 
+		
 	sendRequestToServerPost('http://' + url_http+'/keywords/save', 'mid='+mid+'&kWord='+kWord,function(res){
 
 	});
 
 }
-
 
 //ajax message listner
 var loadNewMessages = function() {
@@ -89,9 +98,9 @@ var loadNewMessages = function() {
 			crt = obj[0].created_at;	//time stamp of last loaded message
 			for (var i = obj.length - 1; 0 <= i; i--) {
 				if (obj[i].seId == myId) {
-					document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof"></div><div class="msg">'+ obj[i].text +'</div></div></div>';
+					document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof"></div><div class="msg">'+ obj[i].text + '<div class="hide" id="mId">'+obj[i].id+ '</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 				} else {
-					document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof"></div><div class="msg">'+ obj[i].text +'</div></div></div>';
+					document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof"></div><div class="msg">'+ obj[i].text + '<div class="hide" id="mId">'+obj[i].id+ '</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 				}
 			}
 			if (!scroll) {
@@ -99,15 +108,6 @@ var loadNewMessages = function() {
 			}
 		}	
 	});
-}
-
-//message type event
-document.getElementById('msg').onkeypress = function(e) {
-
-	//sending message once enter is pressed
-	if (e.keyCode == 13) {
-		sendMessage();
-	}
 }
 
 //requests all online users
@@ -161,9 +161,9 @@ var loadMessages = function() {
 
 		for (var i = obj.length - 1; 0 <= i; i--) {
 			if (obj[i].seId == myId) {
-				document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof"></div><div class="msg">'+ obj[i].text +'</div></div></div>';
+				document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof"></div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 			} else {
-				document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof"></div><div class="msg">'+ obj[i].text +'</div></div></div>';
+				document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof"></div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 			}
 		}
 		if (limit != 0) {
@@ -193,15 +193,16 @@ var selectConversation = function(e) {
 	
 	document.getElementById('msgs-box').innerHTML = '';
 	sendRequestToServerPost('http://' + url_http+'/msg/allMsg', 'pid='+pid+'&limit='+limit,function(res){
-		obj = JSON.parse(res);
+		console.log(res);
+		obj = JSON.parse(res); 
 		crt = obj[0].created_at;
 		//my id is read in php script inline script
 		document.getElementById('msgs-box').innerHTML = ' ';
 		for (var i = obj.length - 1; 0 <= i; i--) {
 			if (obj[i].seId == myId) {
-				document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof"></div><div class="msg">'+ obj[i].text +'</div></div></div>';
+				document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof"></div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 			} else {
-				document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof"></div><div class="msg">'+ obj[i].text +'</div></div></div>';
+				document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof"></div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 			}
 		}
 		autoScrollBottom('msgs-box');	//scroll down to latest message	

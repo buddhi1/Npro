@@ -4,7 +4,7 @@
 	<title></title>
 </head>
 <body>
-<div class="container"> 
+<div class="container-fluid"> 
 	<h2>Edit User</h2>
 	<form action="postEditAuth" method="POST" class="form-horizontal" onsubmit="return pswEditValidate()">
 	<?php if (isset($user)) { ?>

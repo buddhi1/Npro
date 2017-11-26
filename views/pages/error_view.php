@@ -4,14 +4,11 @@
 	<title></title>
 </head>
 <body>
-<h1>Error page</h1>
-<h3>
-	<?php 
-		if ($message != '') {
-			echo 'ERROR'.'<br/>'.$message;
-		} 
-	?>
-	
-</h3>
+<h1 class="error">Error Page</h1>
+<?php 
+	if (isset($_GET['message'])) {
+		echo '<div class="alert alert-danger">'.urldecode(base64_decode($_GET['message'])).'</div>';
+	} 
+?>
 </body>
 </html>

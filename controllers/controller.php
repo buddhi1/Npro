@@ -11,7 +11,7 @@ class Controller
 
 	//redirects to a required url
 	public static function route($path, $message){
-		header('Location: '. $url.$path.'?message='.urlencode(base64_encode($message)));
+		header('Location: /'. Controller::$url.'/'.$path.'?message='.urlencode(base64_encode($message)));
     	die();
 	}
 	

@@ -16,7 +16,7 @@ $url = $_SERVER['REQUEST_URI'];
 
 //Split URL path
 $path_info = explode('/', parse_url($url, PHP_URL_PATH));
-$url = $path_info[1];
+$url = $path_info[1]; 
 $url_http = $_SERVER['SERVER_NAME'].'/'.$url;
 
 if (sizeof($path_info) <= 4 && sizeof($path_info) > 3) { //passed to requested action
@@ -34,5 +34,21 @@ if (sizeof($path_info) <= 4 && sizeof($path_info) > 3) { //passed to requested a
 	$action = 'index';	
 }
 
-require_once('views/layouts/default_layout.php');
+//checking the availability of the requested controller and action
+require_once('lib/filter.php');
+
+if (!isset($_SESSION)) {
+	session_start();
+}
+
+//apply correct layout considering the session
+if (count($_SESSION) >= 1) { //if one session available
+	if ($_SESSION['type'] == 0) {
+		require_once('views/layouts/admin_layout.php');
+	} else {
+		require_once('views/layouts/std_layout.php');
+	}
+} else {
+	require_once('views/layouts/default_layout.php');
+}
 ?>

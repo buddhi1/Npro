@@ -9,9 +9,10 @@ class Message
 	public $text;
 	public $seId;
 	public $recId;
+	public $created_at;
 	
 	//class constructor
-	public function __construct($id, $name, $gender, $picture, $created_at)
+	public function __construct($id, $text)
 	{
 		$args = func_get_args(); // read arguements in the constructor call
 		$num = func_num_args();  // read number of arguements in the constructor call
@@ -27,6 +28,14 @@ class Message
 		$this->text = $text;
 		$this->seId = $seId;
 		$this->recId = $recId;
+		$this->created_at = $created_at;
+	}
+
+	//for 2 arguements, class constructor
+	function __construct_3($id, $text, $created_at)	
+	{
+		$this->id = $id;
+		$this->text = $text;
 		$this->created_at = $created_at;
 	}
 

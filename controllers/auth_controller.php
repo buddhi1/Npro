@@ -29,22 +29,24 @@ class AuthController extends Controller
 		      	if ($email != '' && $password != '') {
 		      		//checking the credentials in the db
 		    		$db = db::getConnection();
-			    	$req = $db->prepare('SELECT * FROM auth WHERE email = :email AND password = :password AND active = 1');
+			    	$req = $db->prepare('SELECT auth.*, name FROM auth, users WHERE email = :email AND password = :password AND active = 1 and id = auth_id');
 			      	$req->execute(array('email' => $email, 'password' => md5($password))); //parameter value passing
 			      	$obj = $req->fetch();
 		      		if ($obj) {
 			      		//confirm login
 			      		$db = db::getConnection();
 			      		$req = $db->prepare('UPDATE auth SET flag = flag + 1 WHERE id = :id');
-			      		$req->execute(array('id' => $obj[0]));
+			      		$req->execute(array('id' => $obj[0])); 
 			      		
 			      		$_SESSION["id"] = $obj[0];
 			      		$_SESSION["email"] = $obj[1];
 			      		$_SESSION["password"] = $obj[2]; 
 			      		$_SESSION["type"] = $obj[3]; 
+			      		$_SESSION["name"] = $obj['name'];
 
 			      		if (isset($_SESSION['id']) && isset($_SESSION['email']) && isset($_SESSION['password'])) {
-			      			$message = "Login Successfull";
+							Controller::route('users/profile', 'Login Successfull');
+
 			      		}else{
 			      			$message = 'Something went wrong. Try again';
 			      		}
@@ -57,9 +59,9 @@ class AuthController extends Controller
 			}else{
 				$message = "Please try again";
 			}
-			Controller::route('login', $message);
+			Controller::route('auth/login', $message);
 		}else{
-			Controller::route('login', "You are alredy logged in");
+			Controller::route('auth/login', "You are alredy logged in");
 		}	      	
 	}
 
@@ -84,7 +86,7 @@ class AuthController extends Controller
 		}else {
 			$message = 'You have not yet login';
 		}
-		Controller::route('login', $message);
+		Controller::route('auth/login', $message);
 
 	}
 

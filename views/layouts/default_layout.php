@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -11,17 +13,18 @@
 	<!-- Latest compiled JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-	<!-- custom CSS file -->
-	<link rel="stylesheet" type="text/css" href="../public/CSS/styles.css">
-</head>
-<body>
-<h1>this is the def layout for all</h1>
-<table>
-	<tr>
-		<td width="40%">Hello</td>
-		<td width="55%"><?php require_once('route.php') ?></td>
-	</tr>
-</table>
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
 
+	<!-- custom CSS file -->
+	<link rel="stylesheet" type="text/css" href="/Npro/public/CSS/styles.css">
+	
+</head>
+<body >
+	<div class="home-page">
+		<h1 class="header-home">Secure Message Parsing (SMP)</h1>
+		<div></div>
+		<div class="workspace-def"><?php require_once('route.php') ?></div>
+	</div>
 </body>
 </html>

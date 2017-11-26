@@ -13,23 +13,46 @@ class UsersController extends Controller
 		require_once('views/users/create_view.php');
 	}
 
+  //returns new user profile page
+  //GET request
+  public function profile($message){
+    if (!isset($_SESSION)) {
+      session_start();
+    }
+
+    if ($_SESSION['type'] == 0) {
+      require_once('views/profile/admin_prof_view.php');
+    } else if ($_SESSION['type'] == 1) {
+      require_once('views/profile/std_prof_view.php');
+    } else {
+      require_once('views/pages/index');
+    }
+  }
+
 	//store all the user information
 	//POST request
 	public function save(){
+    if (!isset($_SESSION)) {
+      session_start();
+    }
 		//reading values into parameters 
-    	$email = $_POST['email'];    	
+  	$email = $_POST['email'];    	
 		$password = trim($_POST['password']);
-    	$type = $_POST['type'];
-    	$fname = $_POST['fname'];
-    	$lname = $_POST['lname'];
-    	$street1 = $_POST['street1'];
-    	$street2 = $_POST['street2'];
-    	$city = $_POST['city'];
-    	$state = $_POST['state'];
-    	$zip = $_POST['zip'];    
-    	$gender = $_POST['gender'];	
-    	$pic_path = 'def';
-    	$now = date('Y-m-d H:i:s');
+    $type = 1;
+    if (isset($_POST['type'])) {
+      $type = $_POST['type'];
+    }
+  	
+  	$fname = $_POST['fname'];
+  	$lname = $_POST['lname'];
+  	$street1 = $_POST['street1'];
+  	$street2 = $_POST['street2'];
+  	$city = $_POST['city'];
+  	$state = $_POST['state'];
+  	$zip = $_POST['zip'];    
+  	$gender = $_POST['gender'];	
+  	$pic_path = 'def';
+  	$now = date('Y-m-d H:i:s');
     	// var_dump($now); exit();
 
     	//validating required fields
@@ -53,7 +76,11 @@ class UsersController extends Controller
 	    			$message = "Something went wrong. User registration failed";
 	    		}
 	    		if ($value1 && $value2) {
-	    			$message = "New user has been created successfully";	    			
+            $message = "New user has been created successfully";            
+            
+            if (count($_SESSION) < 1) {
+              Controller::route('auth/login', $message);            
+            }
 	    		}
 	      	}else{
 	      		$message = "Email exists. Please login with the email";
@@ -62,15 +89,30 @@ class UsersController extends Controller
     	}else {
     		$message = "Fill all the required fields";
     	}
-    	Controller::route('create', $message);
+
+      if (count($_SESSION) >= 1) {
+        if ($_SESSION['type'] == 0) { //if one session available
+          Controller::route('users/create', $message);
+        }
+      }
+      else {
+        Controller::route('pages/error', $message);
+      }
+    	
 	}
 
 	//return available details of all the users
 	//GET request
 	public function index(){
+    if (!isset($_SESSION)) {
+      session_start();
+    }
+
 		$users = [];
+    $myId = $_SESSION['id'];
 		$db = db::getConnection();
-		$req = $db->query('SELECT * FROM users');
+		$req = $db->prepare('SELECT * FROM users WHERE auth_id <> :myId');
+    $req->execute(array('myId' => $myId));
 
 		// creating a list of objects from the database results
 		foreach($req->fetchAll() as $obj) {
@@ -98,15 +140,37 @@ class UsersController extends Controller
 
       		require_once('views/users/edit_view.php');
       	}else{
-      		Controller::route('index', 'Invalid User ID');
+      		Controller::route('users/index', 'Invalid User ID');
       	}
 		
 	}
 
+  //returns user change password page
+  //GET request
+  public function changePassword(){
+    if (!isset($_SESSION)) {
+      session_start();
+    }
+
+    $myId = $_SESSION['id'];
+    $db = db::getConnection();
+      $req = $db->prepare('SELECT * FROM auth WHERE id = :id');
+        $req->execute(array('id' => $myId)); //parameter value passing
+        $user = $req->fetch();
+        if ($user) {
+          require_once('views/profile/edit_auth_view.php');
+        }else{
+          Controller::route('/users/profile', 'Something went wrong');
+        }
+    
+  }
+
   //returns user authenticating info edit page
   //GET request
   public function editAuth(){
-    //checking if the id exists
+    if (!isset($_SESSION)) {
+        session_start();
+    }
     $id = $_GET['id'];
     $db = db::getConnection();
       $req = $db->prepare('SELECT id, email, type, active, flag, last_login FROM auth WHERE id = :id');
@@ -115,14 +179,16 @@ class UsersController extends Controller
         if ($user) {
           require_once('views/auth/edit_view.php');
         }else{
-          Controller::route('index', 'Invalid User ID');
+          Controller::route('users/index', 'Invalid User ID');
         }
     
   }
 
+
 	//edit existing user
     //POST request
     public static function postEdit() {
+      
     	//check if the id is passed
     	if (!isset($_POST['id'])) {
     		Controller::route('index', 'Invalid User ID');
@@ -156,7 +222,11 @@ class UsersController extends Controller
       	}else{
       		$message = "No such User ID exists";
       	}
-      	Controller::route('index', $message);
+        if ($id == $_SESSION['id']) {
+          Controller::route('users/profile', $message);
+        } else {
+          Controller::route('users/index', $message);
+        }
     }
 
     //Deletes an exisiting user
@@ -181,17 +251,57 @@ class UsersController extends Controller
       	}else{
       		$message = "User ID is invalid";
       	}
-      	Controller::route('index', $message);
+      	Controller::route('users/index', $message);
     }
 
-    //edit existing user
+    //edit user password
+    //POST request
+    public static function postChangePassword() {
+      if (!isset($_SESSION)) {
+        session_start();
+      }
+    	$id = $_SESSION['id'];
+      $currPassword = md5(trim($_POST['currPassword']));
+
+    	//checking if the id exists
+    	$db = db::getConnection();
+    	$req = $db->prepare('SELECT * FROM auth WHERE id = :id');
+      	$req->execute(array('id' => $id)); //parameter value passing
+      	$obj = $req->fetch();
+
+      	if ($obj['password'] == $currPassword) { //checking for old password match
+          $password = trim($_POST['password']);
+          $repsw = trim($_POST['pswConfirm']);
+          if ($password != "" && $repsw != "") {
+            if ($password == $repsw) {
+                  
+              $req = $db->prepare('UPDATE auth SET password=:password WHERE id=:id');
+              $req->execute(array('password' => md5($password), 'id' => $obj['id']));
+
+              $message = "Password updated successfully";          
+              
+            } else {
+              $message = "Passwords does not match. Please try again";
+            }
+
+          } else {
+            $message = "Password was not changed";
+        }
+      }else {
+        $message = "Incorrect old Password";
+      }
+      	
+      	Controller::route('users/profile', $message);
+    }
+
+     //edit user auth info
     //POST request
     public static function postEditAuth() {
-    	//check if the id is passed
-    	if (!isset($_POST['id'])) {
-    		Controller::route('index', 'Invalid User ID');
-    	}
-    	$id = $_POST['id'];
+      //check if the id is passed
+      if (!isset($_POST['id'])) {
+        Controller::route('index', 'Invalid User ID');
+      }
+      $id = $_POST['id'];
       $type = $_POST['type']; 
       $active = 0;
       if (isset($_POST['active'])) {
@@ -200,37 +310,37 @@ class UsersController extends Controller
         }        
       } 
 
-    	//checking if the id exists
-    	$db = db::getConnection();
-    	$req = $db->prepare('SELECT * FROM auth WHERE id = :id');
-      	$req->execute(array('id' => $id)); //parameter value passing
-      	$obj = $req->fetch();
+      //checking if the id exists
+      $db = db::getConnection();
+      $req = $db->prepare('SELECT * FROM auth WHERE id = :id');
+        $req->execute(array('id' => $id)); //parameter value passing
+        $obj = $req->fetch();
 
-      	if ($obj) {
-      	$password = trim($_POST['password']);
-        $repsw = trim($_POST['pswConfirm']);
-        if ($password != "" && $repsw != "") {
-          if ($password == $repsw) {
-                
-            $req = $db->prepare('UPDATE auth SET password=:password, type = :type, active = :active WHERE id=:id');
-            $req->execute(array('password' => md5($password), 'type' => $type, 'id' => $obj['id'], 'active' => $active));
+        if ($obj) {
+          $password = trim($_POST['password']);
+          $repsw = trim($_POST['pswConfirm']);
+          if ($password != "" && $repsw != "") {
+            if ($password == $repsw) {
+                  
+              $req = $db->prepare('UPDATE auth SET password=:password, type = :type, active = :active WHERE id=:id');
+              $req->execute(array('password' => md5($password), 'type' => $type, 'id' => $obj['id'], 'active' => $active));
 
-            $message = "User information updated successfully";          
-            
+              $message = "User information updated successfully";          
+              
+            } else {
+              $message = "Passwords does not match. Please try again";
+            }
+
           } else {
-            $message = "Passwords does not match. Please try again";
-          }
-
-        } else {
-          $req = $db->prepare('UPDATE auth SET type = :type, active = :active WHERE id=:id');
-          $req->execute(array('type' => $type, 'id' => $obj['id'], 'active' => $active));
-          $message = "User information updated successfully. Password preserved";
+            $req = $db->prepare('UPDATE auth SET type = :type, active = :active WHERE id=:id');
+            $req->execute(array('type' => $type, 'id' => $obj['id'], 'active' => $active));
+            $message = "User information updated successfully. Password preserved";
         }
       }else {
         $message = "No such User ID exists";
       }
-      	
-      	Controller::route('index', $message);
+        
+        Controller::route('users/index', $message);
     }
   }
 

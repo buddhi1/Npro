@@ -4,7 +4,7 @@
 	<title></title>
 </head>
 <body>
-<div class="container">
+<div class="container-fluid">
 	<h2>Create User</h2>
 	<?php 
 		if (isset($_GET['message'])) {

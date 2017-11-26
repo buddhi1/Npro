@@ -13,7 +13,7 @@
 	</div>
 	<div class="msg-type-box">
 		<input disabled="disabled" type="text" name="msg" id="msg" placeholder="Say hi..." />
-		<button class="btn btn-outline-success" id="addKeyWord">Add KeyWord</button>
+		<button class="btn btn-success" id="addKeyWord">Add KeyWord</button>
 	</div>
 </div>
 </body>

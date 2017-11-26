@@ -1,3 +1,229 @@
+h1, h2, h3, h4, h5, p, a {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+/*home page styles*/
+
+.home-page {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  margin: 0px;
+  overflow: hidden;
+  background: url('/Npro/public/uploads/images/other/bg.jpg');
+}
+
+.home-page:before {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: #0c0707;
+  content: ' ';
+  opacity: .6;
+}
+
+.header-home {
+  position: relative;
+  color: white;
+  background-color: #5bc0de;
+  margin: 0px;
+  padding: 15px;
+  font-size: 40px;
+  font-weight: bold;
+  text-shadow: 4px 3px #18586b;
+}
+
+.testimonial {
+  position: relative;
+  display: block;
+  color: #f1f1f1;
+  font-size: 60px;
+  text-align: center;
+  margin-bottom: 70px;
+  border: 2px solid white;
+  padding: 50px 0px 50px;
+  font-weight: bold;
+}
+
+/*home page styles end*/
+
+.error {
+  position: relative;
+  color: #eeeded;
+  background-color: #d00202;
+  padding: 10px;
+}
+
+/*Default layout dashboard */
+.nav-bar{
+    background-color: #343a40;
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    z-index: 999999;
+}
+
+.head {
+    display: inline-block;
+    color: #b5dbf9;
+    margin-top: 8px;
+    margin-left: 26px;
+    float: left;
+    font-size: 32px;
+    letter-spacing: 2px;
+}
+
+.logout {
+    display: inline-block;
+    font-size: 16px;
+    color: #e5e8e9;
+    float: right;
+    margin-right: 20px;
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+.welcome {
+  display: inline-block;
+    color: #e6e0e0;
+    float: right;
+    margin-top: 15px;
+    margin-right: 20px;
+    font-size: 16px;
+}
+
+.logout:hover {
+  text-decoration: none;
+  color: white;
+}
+
+.logout:visited {
+  text-decoration: none;
+  color: #c0c2c3;
+}
+
+.logout:focus {
+  text-decoration: none;
+}
+
+.workspace-box{
+    /*background-color: yellow;*/
+    height: auto;
+    width: 80%;
+    display: inline-block;
+    float: right;
+    top: 60px;
+    position: relative;
+  overflow: auto;
+}
+
+.workspace-def{
+    height: auto;
+    display: block;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 45px;
+    position: relative;
+}
+
+.menu-box{
+    background-color: #343a40;
+    width: 20%;
+    min-width: 270px;
+    display: inline-block;
+    height: 100%;
+    position: fixed;
+    overflow-x: hidden;
+    overflow-y: auto;
+    top: 60px;
+}
+
+.menu-box ul{
+  padding: 0px;
+}
+
+.menu-box li{
+  display: block;
+}
+
+.vert-menu-item-home {
+    padding: 10px;
+    cursor: pointer;
+    color: #d2d6ea;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-bottom: 0px;
+    border-bottom: 1px solid #ababab;
+    display: block;
+    padding-left: 20px;
+}
+
+.vert-menu-item-home:hover{
+  color: #ffffff;
+    text-decoration: none;
+    background-color: #516171;
+    transition: all 0.5s;
+}
+
+.vert-menu-item {
+    padding: 10px;
+    cursor: pointer;
+    color: #d2d6ea;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-bottom: 0px;
+    border-bottom: 1px solid #ababab;
+    display: block;
+    padding-left: 20px;
+}
+
+.vert-menu-item:hover{
+  color: #ffffff;
+    text-decoration: none;
+    background-color: #516171;
+    transition: all 0.5s;
+}
+
+.col a {
+  display: block;
+}
+
+.col a {
+  background-color: #516171;
+    padding: 7px;
+    padding-left: 20px;
+    cursor: pointer;
+    color: #c8cbdd;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-bottom: 0px;
+    margin-top: -1px;
+    border-bottom: 1px solid #ababab;
+    display: block;
+}
+
+.col a:hover{
+  color: #ffffff;
+    text-decoration: none;
+    background-color: #687582;
+    transition: all 0.5s;
+}
+
+/* Icon when the collapsible content is shown */
+  .vert-menu-item:after {
+    font-family: "Glyphicons Halflings";
+    content: "\e114";
+    float: right;
+    margin-left: 15px;
+  }
+  /* Icon when the collapsible content is hidden */
+  .vert-menu-item.collapsed:after {
+    content: "\e080";
+  }
+
+/*Default layout dashboard end */
+
 /* The switch - the box around the slider */
 .switch {
   position: relative;
@@ -62,9 +288,10 @@ input:checked + .slider:before {
   height: 500px;
   width: 650px;
   overflow: hidden;
-  /*margin-left: auto;
-  margin-right: auto;*/
   padding: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
 }
 
 .v1-box{
@@ -183,4 +410,36 @@ input:checked + .slider:before {
 
 .hide{
   display: none;  
+}
+
+.search-input{
+    width: 100%;
+    display: block;
+    min-height: 35px;
+    margin-top: 25px;
+}
+
+.msg-search-res{
+  margin: 15px auto 15px auto;
+  width: 50%;
+}
+
+.msg-his{
+  display: block;
+  border: 1px solid #00BCD4;
+  padding: 6px;
+  margin-top: 8px;
+  border-radius: 7px;
+  background-color: #badff1;
+}
+
+.crtd{
+    display: block;
+    text-align: right;
+    font-size: 10px;
+    color: #086590;
+}
+
+.fix-box15{
+  width: 150px;
 }

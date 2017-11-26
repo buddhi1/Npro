@@ -4,15 +4,18 @@
 	<title></title>
 </head>
 <body>
-	<div>
-		<div>
-			<input type="text" name="user" id="user" placeholder="User Name Here" />
+	<div class="search-input">
+		<div class="col-sm-4">
+			<input type="text" name="user" id="user" placeholder="User Name Here" class="form-control" />
 		</div>
-		<div>
-			<input type="text" name="keyword" id="keyword" placeholder="Keyword Here" />
+		<div class="col-sm-4">
+			<input type="text" name="keyword" id="keyword" placeholder="Keyword Here" class="form-control" />
+		</div>
+		<div class="col-sm-4">
+			<button class="btn btn-success" id="addKeyWord">Add KeyWord</button>
 		</div>
 	</div>
-	<div id="results"></div>
+	<div id="results" class="msg-search-res"></div>
 </body>
 </html>
 <script type="text/javascript">
