@@ -33,6 +33,10 @@ h1, h2, h3, h4, h5, p, a {
   text-shadow: 4px 3px #18586b;
 }
 
+.header-link:hover {
+  text-decoration: none;
+}
+
 .testimonial {
   position: relative;
   display: block;
@@ -108,13 +112,14 @@ h1, h2, h3, h4, h5, p, a {
 
 .workspace-box{
     /*background-color: yellow;*/
-    height: auto;
-    width: 80%;
-    display: inline-block;
-    float: right;
-    top: 60px;
-    position: relative;
+  height: auto;
+  width: 80%;
+  display: inline-block;
+  float: right;
+  top: 60px;
+  position: relative;
   overflow: auto;
+  padding: 12px;
 }
 
 .workspace-def{
@@ -127,16 +132,55 @@ h1, h2, h3, h4, h5, p, a {
     position: relative;
 }
 
-.menu-box{
+.menu-box {
     background-color: #343a40;
-    width: 20%;
-    min-width: 270px;
+    width: 270px;
     display: inline-block;
     height: 100%;
     position: fixed;
     overflow-x: hidden;
     overflow-y: auto;
     top: 60px;
+    z-index: 999;
+    -webkit-transition: width .6s;
+    transition: width .6s;
+    padding-top: 27px;
+}
+
+.vmenu-button {
+    display: none;
+    position: fixed;
+    z-index: 999999;
+    color: #343a40;
+    top: 57px;
+    font-size: 28px;
+    padding-left: 4px;
+}
+
+.vmenu-button:hover {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1015px) {
+    .menu-box {
+      width: 0px;
+    }
+
+    .workspace-box {
+      width: 100%;
+    }
+    .vmenu-button {
+      display: block;
+    }
+}
+
+.menu-box-large {
+  width: 270px;
+}
+
+.ham-clicked {
+    margin-left: 230px;
+    color: #ffffff;
 }
 
 .menu-box ul{
@@ -352,6 +396,12 @@ input:checked + .slider:before {
   border-radius: 50%;
   float: left;
   margin-right: 0px;
+  text-align: center;
+  padding-top: 1px;
+  font-size: 25px;
+  font-weight: bold;
+  background-color: #3F51B5;
+  color: white;
 }
 
 .msg-type-box input{
@@ -369,13 +419,16 @@ input:checked + .slider:before {
 }
 
 .user-name{
-  background-color: yellow;
+  /*background-color: yellow;*/
   display: inline-block;
   height: 30px;
-  width: 83px;
+  width: 79px;
   overflow: hidden;
   margin-top: 5px;
   padding-left: 4px;
+  color: #3f51b5;
+  font-weight: 600;
+  font-size: 16px;
 }
 
 .my-prof{
@@ -386,6 +439,12 @@ input:checked + .slider:before {
   border-radius: 50%;
   float: right;
   margin-left: 5px;
+  text-align: center;
+  padding-top: 1px;
+  font-size: 25px;
+  font-weight: bold;
+  background-color: #3F51B5;
+  color: white;
 }
 
 .rec-msg-box{
@@ -421,7 +480,7 @@ input:checked + .slider:before {
 
 .msg-search-res{
   margin: 15px auto 15px auto;
-  width: 50%;
+  width: 88%;
 }
 
 .msg-his{
@@ -442,4 +501,70 @@ input:checked + .slider:before {
 
 .fix-box15{
   width: 150px;
+}
+
+.user-more {
+  display: inline-block;
+  position: absolute;
+  margin-top: 8px;
+}
+
+.user-more button {
+  width: 16px;
+  margin: 0px;
+  padding: 2px;
+  border: 0px;
+  background-color: #ffffff;
+  border-radius: 4px;
+}
+
+.user-more button:hover {
+  background-color: #333333;
+  color: white;
+}
+
+.user-info {
+  background-color: #e3e6e9;
+  padding: 19px;
+  color: #0a0a99;
+  margin-bottom: 40px;
+}
+
+.user-info h3 {
+  font-weight: bold;
+  font-size: 45px;
+  margin-bottom: 45px;
+}
+
+.user-info p {
+  color: #3737c0;
+  font-size: 20px;
+}
+
+.top-margin {
+  margin-top: 50px;
+}
+
+.msg-text {
+  font-size: 18px;
+  background-color: #0f3e6d;
+  padding: 13px;
+  color: #e2e2e2;
+  border-radius: 12px;
+}
+
+.msg-crt {
+  text-align: right;
+  margin-top: 7px;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.inline-form {
+  display: inline-block;
+  margin-left: 12px;
+}
+
+.top-margin-sm {
+  margin-top: 8px;
 }

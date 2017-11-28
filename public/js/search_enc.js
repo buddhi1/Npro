@@ -28,11 +28,11 @@ var searchMsg = function() {
 
 	document.getElementById('results').innerHTML = '';
 	if (uname.trim() != '' || keyword.trim() != '') {
-		sendRequestToServerPost('http://' + url_http+'/msg/searchPost', 'uname='+uname+'&keyword='+keyword, function(res){
+		sendRequestToServerPost('http://' + url_http+'/msg/searchPostEnc', 'uname='+uname+'&keyword='+keyword, function(res){
 			obj = JSON.parse(res);
 			//my id is read in php script inline script
 			for(var i=0; i < obj.length ; ++i) {
-				document.getElementById('results').innerHTML += '<div id="msg-his" class="msg-his">'+ obj[i].text + '<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd" id="crtd">'+obj[i].created_at+'</span></div>';
+				document.getElementById('results').innerHTML += '<div id="msg-his" class="msg-his">'+ obj[i].text + '<span class="crtd" id="crtd">'+obj[i].created_at+'</span><form class="inline-form" action="http://' + url_http+'/msg/decryptMsg" method="GET"><input class="hide" name="id" value="'+obj[i].id+'" /><button class="btn btn-warning" type-="submit">Decrypt</button></form><form class="inline-form" action="http://' + url_http+'/msg/delete" method="POST"><input class="hide" name="id" value="'+obj[i].id+'" /><button class="btn btn-danger" type-="submit">Delete</button></form></div>';
 			}
 
 			// // adding on click event to all the created divs

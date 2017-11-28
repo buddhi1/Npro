@@ -22,7 +22,7 @@
 </head>
 <body >
 	<div class="home-page">
-		<h1 class="header-home">Secure Message Parsing (SMP)</h1>
+		<a href="/Npro" class="header-link"><h1 class="header-home">Secure Message Parsing (SMP)</h1></a>
 		<div></div>
 		<div class="workspace-def"><?php require_once('route.php') ?></div>
 	</div>

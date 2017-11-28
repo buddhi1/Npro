@@ -23,11 +23,12 @@
 <body>
 <?php if (!isset($_SESSION)) session_start(); ?>
 <div class="nav-bar">
-	<h1 class="head">Secure Messeage Parsing (SMP)</h1>
+	<h1 class="head" id="head">Secure Messeage Parsing (SMP)</h1>
 	
-	<a href="../auth/logout" class="logout"><span class="glyphicon">&#xe163;</span> Logout</a href="#">
+	<a href="../auth/logout" class="logout"><span class="glyphicon">&#xe163;</span> Logout</a>
 	<p class="welcome">Welcome <?php echo $_SESSION['name']; ?>!</p>
 </div>
+<div class="vmenu-button" id="ham"><span class="glyphicon">&#xe236;</span></div>
 <div class="menu-box" id="accordion">
 	<ul>
 		<li>
@@ -64,10 +65,12 @@
 			<ul id="msg-col" class="col collapse">
 				<li><a href="../msg/index">Send Now</a></li>
 				<li><a href="../msg/search">History</a></li>
+				<li><a href="../msg/searchEnc">Encrypted Messages</a></li>
 			</ul>
 		</li>
 	</ul>
 </div>
+<script type="text/javascript" src="/Npro/public/js/layout_control.js"></script>
 <div class="workspace-box">
 	<?php require_once('route.php') ?>
 </div>

@@ -108,17 +108,28 @@ class UsersController extends Controller
       session_start();
     }
 
+    $limit = 0; 
+    if (isset($_GET['limit'])) {
+      $limit = $_GET['limit'];
+    }
+
 		$users = [];
     $myId = $_SESSION['id'];
 		$db = db::getConnection();
-		$req = $db->prepare('SELECT * FROM users WHERE auth_id <> :myId');
-    $req->execute(array('myId' => $myId));
+		$req = $db->prepare('SELECT * FROM users WHERE auth_id <> :myId LIMIT :lt,3');
+    $req->bindValue(':myId', $myId);
+    $req->bindValue(':lt', (int) $limit*3, PDO::PARAM_INT);
+    $req->execute();
 
-		// creating a list of objects from the database results
-		foreach($req->fetchAll() as $obj) {
-			$users[] = new User($obj['auth_id'], $obj['name'], $obj['gender'], $obj['picture'], $obj['created_at']);
-		}
+    // creating a list of objects from the database results
+    foreach($req->fetchAll() as $obj) {      
+      $users[] = new User($obj['auth_id'], $obj['name'], $obj['gender'], $obj['picture'], $obj['created_at']);
+    }
 
+    $req = $db->prepare('SELECT count(*) FROM users WHERE auth_id <> :myId');
+    $req->bindValue(':myId', $myId);
+    $req->execute();
+    $count = $req->fetch();
 		// return $users;
 		require_once('views/users/index_view.php');
 	}
@@ -144,6 +155,28 @@ class UsersController extends Controller
       	}
 		
 	}
+
+    //returns user view page
+  //GET request
+  public function view(){
+    //checking if the id exists
+    $id = $_GET['id'];
+    $db = db::getConnection();
+      $req = $db->prepare('SELECT auth_id, name, address, gender, picture FROM users WHERE auth_id = :id');
+        $req->execute(array('id' => $id)); //parameter value passing
+        $obj = $req->fetch();
+        if ($obj) {
+          $name = explode(' ', $obj['name']); // split name
+          $address = explode(',', $obj['address']); // split address
+          //create an user object to send to front-end
+      $user = new User($obj['auth_id'], $name[0], $name[1], $address[0], $address[1], $address[2], $address[3], $address[4], $obj['gender'], $obj['picture']); 
+
+          require_once('views/users/view.php');
+        }else{
+          Controller::route('users/profile', 'Invalid User ID');
+        }
+    
+  }
 
   //returns user change password page
   //GET request
@@ -341,6 +374,49 @@ class UsersController extends Controller
       }
         
         Controller::route('users/index', $message);
+    }
+
+    //upload image
+    //class method
+    public function uploadImage() {
+      $target_dir = "uploads/";
+      $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+      $uploadOk = 1;
+      $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+      // Check if image file is a actual image or fake image
+      if(isset($_POST["submit"])) {
+          $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+          if($check !== false) {
+              echo "File is an image - " . $check["mime"] . ".";
+              $uploadOk = 1;
+          } else {
+              echo "File is not an image.";
+              $uploadOk = 0;
+          }
+      }
+
+      // Check file size
+      if ($_FILES["fileToUpload"]["size"] > 500000) {
+          echo "Sorry, your file is too large.";
+          $uploadOk = 0;
+      }
+      // Allow certain file formats
+      if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+      && $imageFileType != "gif" ) {
+          echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+          $uploadOk = 0;
+      }
+      // Check if $uploadOk is set to 0 by an error
+      if ($uploadOk == 0) {
+          echo "Sorry, your file was not uploaded.";
+      // if everything is ok, try to upload file
+      } else {
+          if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+              echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+          } else {
+              echo "Sorry, there was an error uploading your file.";
+          }
+      }
     }
   }
 

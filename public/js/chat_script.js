@@ -1,9 +1,10 @@
 var scroll = false; //checks whether the chat box is being scrolled
 var limit = 0;		//loaded message bulk number
-var crt; 			//time statmp of lasted loaded message
+var crt = '2017-10-04 04:43:50'; 			//time statmp of lasted loaded message
 var loadCount = 0;	//number of times messages being loaded
 var pid = 0;			//current chat partner 
 var loadCapacity = 10;	//# of messages loaded as history
+var pfname 		//chat partner first letter of email
 
 
 //--------------- Event listners BEGIN -------------------------------------------------------------------------------------------------
@@ -13,6 +14,7 @@ var loadCapacity = 10;	//# of messages loaded as history
 window.onload = function() {	
 	//loadMessages();
 	loadUsers();
+	menuHum();
 };
 
 //add key word button click
@@ -98,9 +100,9 @@ var loadNewMessages = function() {
 			crt = obj[0].created_at;	//time stamp of last loaded message
 			for (var i = obj.length - 1; 0 <= i; i--) {
 				if (obj[i].seId == myId) {
-					document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof"></div><div class="msg">'+ obj[i].text + '<div class="hide" id="mId">'+obj[i].id+ '</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
+					document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof">'+myEmail.charAt(0).toUpperCase()+'</div><div class="msg">'+ obj[i].text + '<div class="hide" id="mId">'+obj[i].id+ '</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 				} else {
-					document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof"></div><div class="msg">'+ obj[i].text + '<div class="hide" id="mId">'+obj[i].id+ '</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
+					document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof">'+pfname+'</div><div class="msg">'+ obj[i].text + '<div class="hide" id="mId">'+obj[i].id+ '</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 				}
 			}
 			if (!scroll) {
@@ -115,8 +117,9 @@ var loadUsers = function() {
 	sendRequestToServerPost('http://' + url_http+'/auth/onlineAll', '',function(res){
 		obj = JSON.parse(res);
 		// document.getElementById('users-box').innerHTML = '';
+		
 		for (var i = obj.length - 1; i >= 0; i--) {
-			document.getElementById('users-box').innerHTML +='<div class="prof-box" id="prof-box"><div class="send-prof"></div><div class="user-name">'+obj[i].email+'</div><div class="hide" id="partnerId">'+obj[i].id+'</div></div>';
+			document.getElementById('users-box').innerHTML +='<div class="prof-box" id="prof-box"><div class="send-prof">'+obj[i].email.charAt(0).toUpperCase()+'</div><div class="user-name">'+obj[i].email.split("@")[0].substring(0,8)+'</div><div class="hide" id="partnerId">'+obj[i].id+'</div><form class="user-more" action="http://' + url_http+'/users/view" method="GET"><input class="hide" name="id" value="'+obj[i].id+'"/><button type="submit" class="glyphicon">&#xe235;</button></form></div>';
 			
 		}
 
@@ -161,9 +164,9 @@ var loadMessages = function() {
 
 		for (var i = obj.length - 1; 0 <= i; i--) {
 			if (obj[i].seId == myId) {
-				document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof"></div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
+				document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof">'+myEmail.charAt(0).toUpperCase()+'</div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 			} else {
-				document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof"></div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
+				document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof">'+pfname+'</div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 			}
 		}
 		if (limit != 0) {
@@ -190,26 +193,31 @@ var autoScrollBottom = function(id) {
 var selectConversation = function(e) {
 	pid = e.path[1].childNodes[2].innerText;	//reading the id of the clicked elemnt
 	limit = 0;
-	
+
+	pfname = e.path[1].childNodes[1].innerText.charAt(0).toUpperCase();
+		
 	document.getElementById('msgs-box').innerHTML = '';
 	sendRequestToServerPost('http://' + url_http+'/msg/allMsg', 'pid='+pid+'&limit='+limit,function(res){
-		console.log(res);
 		obj = JSON.parse(res); 
-		crt = obj[0].created_at;
+		if (obj.length > 0) {
+			crt = obj[0].created_at;
+			limit += loadCapacity;
+			loadCount++;
+		}
 		//my id is read in php script inline script
 		document.getElementById('msgs-box').innerHTML = ' ';
 		for (var i = obj.length - 1; 0 <= i; i--) {
 			if (obj[i].seId == myId) {
-				document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof"></div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
+				document.getElementById('msgs-box').innerHTML += '<div class="msg-bg-box"><div class="send-msg-box"><div class="my-prof">'+myEmail.charAt(0).toUpperCase()+'</div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 			} else {
-				document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof"></div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
+				document.getElementById('msgs-box').innerHTML +='<div class="msg-bg-box"><div class="rec-msg-box"><div class="send-prof">'+pfname+'</div><div class="msg">'+ obj[i].text +'<div class="hide" id="mId">'+obj[i].id+'</div><span class="crtd fix-box15" id="crtd">'+obj[i].created_at+'</span></div></div>';
 			}
 		}
 		autoScrollBottom('msgs-box');	//scroll down to latest message	
 		//listing to messages 
 		var myVar = setInterval(loadNewMessages ,1000);
 	});	
-	limit += loadCapacity;
-	loadCount++;				//chat load count
+	// limit += loadCapacity;
+	// loadCount++;				//chat load count
 	
 }

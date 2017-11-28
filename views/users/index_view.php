@@ -65,5 +65,17 @@
 		</tbody>
 	</table>
 </div>
+<ul class="pagination">
+	<?php if($limit != 0) { ?>
+	<li><a href="/Npro/users/index?limit=<?php echo $limit-1; ?>"><?php echo $limit; ?></a></li>
+	<?php } ?>
+	<li class="active"><a href="/Npro/users/index?limit=<?php echo $limit; ?>"><?php echo $limit+1; ?></a></li>
+	<?php if($limit < $count[0]/3-1) { ?>
+	<li><a href="/Npro/users/index?limit=<?php echo $limit+1; ?>"><?php echo $limit+2; ?></a></li>
+	<?php } ?>
+	<?php if($limit+1 < $count[0]/3-1) { ?>
+	<li><a href="/Npro/users/index?limit=<?php echo $limit+2; ?>"><?php echo $limit+3; ?></a></li>
+	<?php } ?>
+</ul>
 </body>
 </html>

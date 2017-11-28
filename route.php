@@ -4,7 +4,6 @@
 function call($controller, $action, $message, $url, $url_http){
 	//calling required controller 
 	require_once('controllers/'.$controller.'_controller.php');
-
 	switch ($controller) {
 		//creating a new instance, if the controller is default
 		case 'pages':

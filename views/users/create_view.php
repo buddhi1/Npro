@@ -11,7 +11,7 @@
 			echo '<div class="alert alert-info">'.urldecode(base64_decode($_GET['message'])).'</div>';
 		} 
 	?>
-	<form action="save" method="POST" class="form-horizontal" onsubmit="return pswValidate()">
+	<form action="save" method="POST" class="form-horizontal" onsubmit="return pswValidate()" enctype="multipart/form-data">
 		<div class="form-group">
 			<label class="control-label col-sm-2">Email: </label>
 			<div class="col-sm-4">
@@ -91,6 +91,11 @@
 			</div>
 		</div>		
 		<div class="form-group">
+			<label class="control-label col-sm-2">Profile Image: </label>
+			<div class="col-sm-offset-2 col-sm-10">
+				<input type="file" name="fileToUpload" id="fileToUpload">
+			</div>
+		</div><div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				<button type="submit" id="submit" class="btn btn-default">Submit</button>
 			</div>

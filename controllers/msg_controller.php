@@ -172,7 +172,7 @@ class MessagesController extends Controller
 
 			if ($uname != '' && $keyword == '') {
 				$db = db::getConnection();
-	      		$req = $db->prepare("SELECT messages.id, text, re_key, messages.created_at FROM messages, msg_sent WHERE me_id = messages.id AND re_id = $id AND se_id = ANY (SELECT auth_id FROM users WHERE UPPER(name) LIKE UPPER(:funame) OR UPPER(name) LIKE UPPER(:uname))");
+	      		$req = $db->prepare("SELECT messages.id, text, re_key, messages.created_at FROM messages, msg_sent WHERE me_id = messages.id AND re_id = $id AND se_id = ANY (SELECT auth_id FROM users WHERE UPPER(name) LIKE UPPER(:funame) OR UPPER(name) LIKE UPPER(:uname)) ORDER BY messages.created_at DESC");
 	      		$req->bindValue(':funame', $uname.'%', PDO::PARAM_STR);
 	      		$req->bindValue(':uname', '%'.$uname.'%', PDO::PARAM_STR);
 	      		$req->execute();
@@ -187,7 +187,7 @@ class MessagesController extends Controller
 				} 
 			} else if ($uname == '' && $keyword != '') {
 				$db = db::getConnection();
-	      		$req = $db->prepare("SELECT messages.id, text, re_key, messages.created_at FROM messages, message_keyword, msg_sent WHERE me_id = messages.id AND re_id = $id AND m_id = messages.id AND k_id = ANY (SELECT id FROM keywords WHERE UPPER(keyword) LIKE UPPER(:fkeyword) OR UPPER(keyword) LIKE UPPER(:keyword))");
+	      		$req = $db->prepare("SELECT messages.id, text, re_key, messages.created_at FROM messages, message_keyword, msg_sent WHERE me_id = messages.id AND re_id = $id AND m_id = messages.id AND k_id = ANY (SELECT id FROM keywords WHERE UPPER(keyword) LIKE UPPER(:fkeyword) OR UPPER(keyword) LIKE UPPER(:keyword)) ORDER BY messages.created_at DESC");
 	      		$req->bindValue(':fkeyword', $keyword.'%', PDO::PARAM_STR);
 	      		$req->bindValue(':keyword', '%'.$keyword.'%', PDO::PARAM_STR);
 	      		$req->execute();
@@ -202,7 +202,7 @@ class MessagesController extends Controller
 				} 
 			} else if ($uname != '' && $keyword != '') {
 				$db = db::getConnection();
-	      		$req = $db->prepare("SELECT messages.id, text, re_key, messages.created_at FROM messages, message_keyword, msg_sent WHERE me_id = messages.id AND re_id = $id AND m_id = messages.id AND k_id = ANY (SELECT id FROM keywords WHERE UPPER(keyword) LIKE UPPER(:fkeyword) OR UPPER(keyword) LIKE UPPER(:keyword)) AND se_id = ANY (SELECT auth_id FROM users WHERE UPPER(name) LIKE UPPER(:funame) OR UPPER(name) LIKE UPPER(:uname))");
+	      		$req = $db->prepare("SELECT messages.id, text, re_key, messages.created_at FROM messages, message_keyword, msg_sent WHERE me_id = messages.id AND re_id = $id AND m_id = messages.id AND k_id = ANY (SELECT id FROM keywords WHERE UPPER(keyword) LIKE UPPER(:fkeyword) OR UPPER(keyword) LIKE UPPER(:keyword)) AND se_id = ANY (SELECT auth_id FROM users WHERE UPPER(name) LIKE UPPER(:funame) OR UPPER(name) LIKE UPPER(:uname)) ORDER BY messages.created_at DESC");
 	      		$req->bindValue(':fkeyword', $keyword.'%', PDO::PARAM_STR);
 	      		$req->bindValue(':keyword', '%'.$keyword.'%', PDO::PARAM_STR);
 	      		$req->bindValue(':funame', $uname.'%', PDO::PARAM_STR);
@@ -226,6 +226,12 @@ class MessagesController extends Controller
 
 	}
 
+	//return message history encrypted version
+	//GET request
+	public function searchEnc() {
+		require_once('views/chat/history_enc_view.php');
+	}
+
 	//returns the search results for search by username and keyword encrypted
 	//POST request
 	public function searchPostEnc() {
@@ -240,7 +246,7 @@ class MessagesController extends Controller
 
 			if ($uname != '' && $keyword == '') {
 				$db = db::getConnection();
-	      		$req = $db->prepare("SELECT messages.id, text, messages.created_at FROM messages, msg_sent WHERE me_id = messages.id AND se_id = ANY (SELECT auth_id FROM users WHERE UPPER(name) LIKE UPPER(:funame) OR UPPER(name) LIKE UPPER(:uname))");
+	      		$req = $db->prepare("SELECT messages.id, text, messages.created_at FROM messages, msg_sent WHERE me_id = messages.id AND re_id = $id AND se_id = ANY (SELECT auth_id FROM users WHERE UPPER(name) LIKE UPPER(:funame) OR UPPER(name) LIKE UPPER(:uname)) ORDER BY messages.created_at DESC");
 	      		$req->bindValue(':funame', $uname.'%', PDO::PARAM_STR);
 	      		$req->bindValue(':uname', '%'.$uname.'%', PDO::PARAM_STR);
 	      		$req->execute();
@@ -249,7 +255,7 @@ class MessagesController extends Controller
 				} 
 			} else if ($uname == '' && $keyword != '') {
 				$db = db::getConnection();
-	      		$req = $db->prepare("SELECT messages.id, text, messages.created_at FROM messages, message_keyword, msg_sent WHERE me_id = messages.id AND m_id = messages.id AND k_id = ANY (SELECT id FROM keywords WHERE UPPER(keyword) LIKE UPPER(:fkeyword) OR UPPER(keyword) LIKE UPPER(:keyword))");
+	      		$req = $db->prepare("SELECT messages.id, text, messages.created_at FROM messages, message_keyword, msg_sent WHERE me_id = messages.id AND m_id = messages.id AND re_id = $id AND k_id = ANY (SELECT id FROM keywords WHERE UPPER(keyword) LIKE UPPER(:fkeyword) OR UPPER(keyword) LIKE UPPER(:keyword)) ORDER BY messages.created_at DESC");
 	      		$req->bindValue(':fkeyword', $keyword.'%', PDO::PARAM_STR);
 	      		$req->bindValue(':keyword', '%'.$keyword.'%', PDO::PARAM_STR);
 	      		$req->execute();
@@ -258,7 +264,7 @@ class MessagesController extends Controller
 				} 
 			} else if ($uname != '' && $keyword != '') {
 				$db = db::getConnection();
-	      		$req = $db->prepare("SELECT messages.id, text, messages.created_at FROM messages, message_keyword, msg_sent WHERE me_id = messages.id AND m_id = messages.id AND k_id = ANY (SELECT id FROM keywords WHERE UPPER(keyword) LIKE UPPER(:fkeyword) OR UPPER(keyword) LIKE UPPER(:keyword)) AND se_id = ANY (SELECT auth_id FROM users WHERE UPPER(name) LIKE UPPER(:funame) OR UPPER(name) LIKE UPPER(:uname))");
+	      		$req = $db->prepare("SELECT messages.id, text, messages.created_at FROM messages, message_keyword, msg_sent WHERE me_id = messages.id AND m_id = messages.id AND re_id = $id AND k_id = ANY (SELECT id FROM keywords WHERE UPPER(keyword) LIKE UPPER(:fkeyword) OR UPPER(keyword) LIKE UPPER(:keyword)) AND se_id = ANY (SELECT auth_id FROM users WHERE UPPER(name) LIKE UPPER(:funame) OR UPPER(name) LIKE UPPER(:uname)) ORDER BY messages.created_at DESC");
 	      		$req->bindValue(':fkeyword', $keyword.'%', PDO::PARAM_STR);
 	      		$req->bindValue(':keyword', '%'.$keyword.'%', PDO::PARAM_STR);
 	      		$req->bindValue(':funame', $uname.'%', PDO::PARAM_STR);
@@ -274,6 +280,67 @@ class MessagesController extends Controller
 		
 		header('Location: http://'.Controller::$url_http.'/public/temp.php?obj='.json_encode($msgs));		//routing to the default ajax 
 
+	}
+
+	//return decrypted message
+	//GET request
+	public function decryptMsg() {
+
+		if (isset($_GET['id'])) {
+			if (!isset($_SESSION)) {
+				session_start();
+			}
+			$id = $_GET['id'];
+			$myId = $_SESSION['id'];
+			$db = db::getConnection();
+      		$req = $db->prepare("SELECT messages.id, text, re_key, messages.created_at FROM messages, msg_sent WHERE me_id = messages.id AND re_id = $myId AND messages.id = $id");
+      		$req->execute();
+      		$obj = $req->fetch();
+
+      		if ($obj) {
+      			define('AES_256_CBC', 'aes-256-cbc');				
+				$re_id = explode(' ', $obj['re_key']);
+				$parts = $re_id;				
+				$decrypted = openssl_decrypt($obj['text'], AES_256_CBC, $parts[0], 0, $parts[1]);
+				$msg = new Message($obj['id'], $decrypted, $obj['created_at']); 	
+				
+				require_once('views/chat/msg_view.php');
+				
+      		} else {
+  				Controller::route('pages/error', 'Illegal Access');
+      		}			
+		} else {
+  			Controller::route('pages/error', 'Something went wrong');
+		}
+	}
+
+	//delete message
+	//POST request
+	public function delete() {
+
+		if (isset($_POST['id'])) {
+			if (!isset($_SESSION)) {
+				session_start();
+			}
+			$id = $_POST['id'];
+			$myId = $_SESSION['id'];
+			$db = db::getConnection();
+      		$req = $db->prepare("SELECT messages.id, text, re_key, messages.created_at FROM messages, msg_sent WHERE me_id = messages.id AND re_id = $myId AND messages.id = $id");
+      		$req->execute();
+      		$obj = $req->fetch();
+
+      		if ($obj) {
+      			$req = $db->prepare('DELETE FROM messages WHERE id = :id');
+		      	$req->execute(array('id' => $id)); //parameter value passing
+		      	$message = "Message deleted successfully";
+				
+      		} else {
+  				$message = "Message ID is invalid";
+      		}			
+		} else {
+			$message = "Something went wrong";
+		}
+		Controller::route('msg/searchEnc', $message);
 	}
 }
 ?>
